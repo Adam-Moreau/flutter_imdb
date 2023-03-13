@@ -1,38 +1,63 @@
 class PostsModel {
   PostsModel({
-    int? userId,
-    int? id,
+    String? id,
     String? title,
-    String? body,
+    int? year,
+    int? imageHeight,
+    String? imageId,
+    String? imageUrl,
+    int? imageWidth,
   }) {
-    _userId = userId;
     _id = id;
     _title = title;
-    _body = body;
+    _year = year;
+    _imageHeight = imageHeight;
+    _imageId = imageId;
+    _imageUrl = imageUrl;
+    _imageWidth = imageWidth;
   }
 
   PostsModel.fromJson(dynamic json) {
-    _userId = json['userId'];
     _id = json['id'];
     _title = json['title'];
-    _body = json['body'];
+    _year = json['year'];
+    if (json['image'] != null) {
+      _imageHeight = json['image']['height'];
+      _imageId = json['image']['id'];
+      _imageUrl = json['image']['url'];
+      _imageWidth = json['image']['width'];
+    }
   }
-  int? _userId;
-  int? _id;
-  String? _title;
-  String? _body;
 
-  int? get userId => _userId;
-  int? get id => _id;
+  String? _id;
+  String? _title;
+  int? _year;
+  int? _imageHeight;
+  String? _imageId;
+  String? _imageUrl;
+  int? _imageWidth;
+
+  String? get id => _id;
   String? get title => _title;
-  String? get body => _body;
+  int? get year => _year;
+  int? get imageHeight => _imageHeight;
+  String? get imageId => _imageId;
+  String? get imageUrl => _imageUrl;
+  int? get imageWidth => _imageWidth;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['userId'] = _userId;
     map['id'] = _id;
     map['title'] = _title;
-    map['body'] = _body;
+    map['year'] = _year;
+    if (_imageHeight != null && _imageId != null && _imageUrl != null && _imageWidth != null) {
+      map['image'] = {
+        'height': _imageHeight,
+        'id': _imageId,
+        'url': _imageUrl,
+        'width': _imageWidth,
+      };
+    }
     return map;
   }
 }
