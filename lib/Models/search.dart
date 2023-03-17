@@ -2,7 +2,6 @@ import 'package:api_test_1/Models/search_model.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:api_test_1/Models/posts_model.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
   // Demo list to show querying
@@ -14,11 +13,11 @@ class CustomSearchDelegate extends SearchDelegate {
     int limit = 20;
 
     String? urlFilm =
-        'https://imdb8.p.rapidapi.com/title/v2/find?title=$reponseDataFilm&$limit';
+        'https://online-movie-database.p.rapidapi.com/title/v2/find?title=$reponseDataFilm&$limit';
     final responseFilm = await http.get(
       Uri.parse(urlFilm),
       headers: {
-        'x-rapidapi-host': 'imdb8.p.rapidapi.com',
+        'x-rapidapi-host': 'online-movie-database.p.rapidapi.com',
         'x-rapidapi-key': '9c05144f40msh34ebc8521e20e9fp12fe60jsn1825707fbfcd',
       },
     );
@@ -65,15 +64,31 @@ class CustomSearchDelegate extends SearchDelegate {
         matchQuery.add(movie);
       }
     }
-    return ListView.builder(
-      itemCount: matchQuery.length,
-      itemBuilder: (context, index) {
-        var result = matchQuery[index];
-        return ListTile(
-          title: Text(searchTerms[index].title.toString()),
-        );
-      },
-    );
+    return Scaffold(
+        body: Column(
+      children: [
+        Expanded(
+          child: FutureBuilder(
+            future: fetchMovies(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Text('Loading');
+              } else {
+                return ListView.builder(
+                  itemCount: matchQuery.length,
+                  itemBuilder: (context, index) {
+                    var result = matchQuery[index];
+                    return ListTile(
+                      title: Text(result.title.toString()),
+                    );
+                  },
+                );
+              }
+            },
+          ),
+        )
+      ],
+    ));
   }
 
   // last overwrite to show the

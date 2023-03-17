@@ -1,5 +1,3 @@
-// ignore_for_file: must_be_immutable
-
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:api_test_1/Models/search.dart';
@@ -14,32 +12,34 @@ class PostsApi extends StatelessWidget {
 
   Future<List<dynamic>> fetchMostPopularMovies() async {
     final response = await http.get(
-      Uri.parse('https://imdb8.p.rapidapi.com/title/get-most-popular-movies'),
+      Uri.parse(
+          'https://online-movie-database.p.rapidapi.com/title/get-most-popular-movies'),
       headers: {
-        'x-rapidapi-host': 'imdb8.p.rapidapi.com',
-        'x-rapidapi-key': '9c05144f40msh34ebc8521e20e9fp12fe60jsn1825707fbfcd',
+        'x-rapidapi-host': 'online-movie-database.p.rapidapi.com',
+        'x-rapidapi-key': '9bfe46c7bcmsh8e4c93d7469b889p19a7b0jsn4f5ba4db7514',
       },
     );
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
 
       //  postList = responseData ;
-      for (int i = 0; i < 2; i++) {
-        reponseDataFilm = responseData[i].substring(responseData[i].indexOf('tt'));
-        String? urlFilm = 'https://imdb8.p.rapidapi.com/title/get-details/?tconst=$reponseDataFilm' ;
+      for (int i = 0; i < 6; i++) {
+        reponseDataFilm =
+            responseData[i].substring(responseData[i].indexOf('tt'));
+        String? urlFilm =
+            'https://online-movie-database.p.rapidapi.com/title/get-details/?tconst=$reponseDataFilm';
         final responseFilm = await http.get(
-          Uri.parse(
-              urlFilm),
+          Uri.parse(urlFilm),
           headers: {
-            'x-rapidapi-host': 'imdb8.p.rapidapi.com',
-            'x-rapidapi-key': '9c05144f40msh34ebc8521e20e9fp12fe60jsn1825707fbfcd',
+            'x-rapidapi-host': 'online-movie-database.p.rapidapi.com',
+            'x-rapidapi-key':
+                '9bfe46c7bcmsh8e4c93d7469b889p19a7b0jsn4f5ba4db7514',
           },
         );
         if (responseFilm.statusCode == 200) {
           final responseDataFilm = json.decode(responseFilm.body);
           postList.add(PostsModel.fromJson(responseDataFilm));
-
-        }else{
+        } else {
           print(responseFilm);
         }
       }
@@ -54,7 +54,8 @@ class PostsApi extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Api Course'),
+        toolbarHeight: 75,
+        title: const Text('Rivendell Theater'),
         actions: [
           IconButton(
             onPressed: () {
@@ -62,58 +63,64 @@ class PostsApi extends StatelessWidget {
               showSearch(
                 context: context,
                 // delegate to customize the search bar
-                delegate: CustomSearchDelegate()
+                delegate: CustomSearchDelegate(),
               );
             },
             icon: const Icon(Icons.search),
           )
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: FutureBuilder(
-              future: fetchMostPopularMovies(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Text('Loading');
-                } else {
-                  return ListView.builder(
-                      itemCount: postList.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Title',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(
-                                  height: 3,
-                                ),
-                                Text(
-                                  postList[index].title.toString(),
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Image.network(postList[index].imageUrl!,)
-                              ],
-                            ),
+      body: FutureBuilder(
+        future: fetchMostPopularMovies(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 0.6,
+              ),
+              shrinkWrap: true,
+              itemCount: postList.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  elevation: 8,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(20)),
+                          child: Image.network(
+                            postList[index].imageUrl!,
+                            fit: BoxFit.cover,
                           ),
-                        );
-                      });
-                }
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Text(
+                          postList[index].title.toString(),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               },
-            ),
-          )
-        ],
+            );
+          }
+        },
       ),
     );
   }
