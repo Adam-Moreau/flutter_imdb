@@ -1,5 +1,5 @@
-class PostsModel {
-  PostsModel({
+class MoviesModel {
+  MoviesModel({
     String? id,
     String? title,
     int? year,
@@ -7,6 +7,8 @@ class PostsModel {
     String? imageId,
     String? imageUrl,
     int? imageWidth,
+    int? runningTimeInMinutes,
+    String? titleType,
   }) {
     _id = id;
     _title = title;
@@ -15,9 +17,11 @@ class PostsModel {
     _imageId = imageId;
     _imageUrl = imageUrl;
     _imageWidth = imageWidth;
+    _runningTimeInMinutes = runningTimeInMinutes ;
+    _titleType = titleType ;
   }
 
-  PostsModel.fromJson(dynamic json) {
+  MoviesModel.fromJson(dynamic json) {
     _id = json['id'];
     _title = json['title'];
     _year = json['year'];
@@ -27,6 +31,8 @@ class PostsModel {
       _imageUrl = json['image']['url'];
       _imageWidth = json['image']['width'];
     }
+    _runningTimeInMinutes = json['runningTimeInMinutes'];
+    _titleType = json['titleType'] ;
   }
 
   String? _id;
@@ -36,6 +42,9 @@ class PostsModel {
   String? _imageId;
   String? _imageUrl;
   int? _imageWidth;
+  int? _runningTimeInMinutes;
+  String? _titleType ;
+
 
   String? get id => _id;
   String? get title => _title;
@@ -44,6 +53,8 @@ class PostsModel {
   String? get imageId => _imageId;
   String? get imageUrl => _imageUrl;
   int? get imageWidth => _imageWidth;
+  int? get runningTimeInMinutes => _runningTimeInMinutes;
+  String? get titleType => _titleType ;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -58,6 +69,8 @@ class PostsModel {
         'width': _imageWidth,
       };
     }
+    map['runningTimeInMinutes'] = _runningTimeInMinutes ;
+    map['titleType'] = _titleType;
     return map;
   }
 }

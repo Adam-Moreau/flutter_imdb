@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'Api/posts.dart';
+import 'Api/movies.dart';
 
 void main() {
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo TEST API',
       theme: ThemeData(
         primarySwatch: Colors.brown,
-        scaffoldBackgroundColor:  Color(0x00e5e5e5), // Update background color here
+        scaffoldBackgroundColor:  Colors.brown[100], // Update background color here
       ),
       home: const MyHomePage(title: 'Flutter Demo TEST'),
     );
@@ -39,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.brown,
-        scaffoldBackgroundColor: Colors.grey[900], // Update background color here
+        scaffoldBackgroundColor: Colors.brown[100], // Update background color here
       ),
       home: PostsApi(),
     );
